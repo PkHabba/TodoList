@@ -20,6 +20,6 @@ export class CategoriesComponent implements OnInit {
 
   // tslint:disable-next-line:typedef
   showTasksByCategory(category: Category) {
-    this.dataHandler.getTasksByCategory(category);
+    this.dataHandler.fillTasksByCategory(category);
   }
 }
