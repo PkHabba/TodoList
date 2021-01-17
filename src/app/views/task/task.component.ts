@@ -9,7 +9,7 @@ import {DataHandlerService} from '../../service/data-handler.service';
 })
 export class TaskComponent implements OnInit {
 
-  tasks: Task;
+  tasks: Task[];
 
   constructor(private dataHandler: DataHandlerService) {
   }
