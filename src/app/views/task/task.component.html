@@ -5,23 +5,23 @@
   <div class="card-body table-responsive">
     <table class="table table-hover">
       <thead class="text-warning">
-      <th>ID</th>
+      <th>#</th>
       <th>Название</th>
       <th>Категория</th>
       <th>Приоритет</th>
-      <th>Статус</th>
       <th>Дата</th>
+      <th>Статус</th>
       </thead>
       <tbody>
-      <tr *ngFor="let tasks of tasks">
-        <td>{{tasks.id}}</td>
+      <tr *ngFor="let tasks of tasks; let i = index">
+        <td>{{i + 1}}</td>
         <td>{{tasks.title}}</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+        <td>{{tasks.category != null ? tasks.category.title : 'Без категории'}}</td>
+        <td>{{tasks.priority != null ? tasks.priority.title : 'Без приоритета'}}</td>
+        <td>{{tasks.date != null ? (tasks.date | date :'dd/mm/YY') : 'Без даты'}}</td>
+        <td><label class="form-check-label"><input [checked]="tasks.completed" class="form-check-input check"
+                                                   type="checkbox"></label></td>
       </tr>
-
       </tbody>
     </table>
   </div>
