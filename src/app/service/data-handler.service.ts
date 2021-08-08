@@ -19,7 +19,7 @@ export class DataHandlerService {
   // tslint:disable-next-line:typedef
   fillTasks() {
     // @ts-ignore
-    this.taskSubject.next(TestData.tasks);
+      this.taskSubject.next(TestData.tasks);
   }
 
   // tslint:disable-next-line:typedef
