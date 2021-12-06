@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {Task} from 'src/app/model/Task';
 import {DataHandlerService} from '../../service/data-handler.service';
 import {MatTableDataSource} from '@angular/material/table';
@@ -10,7 +10,7 @@ import {MatSort} from '@angular/material/sort';
   templateUrl: './task.component.html',
   styleUrls: ['./task.component.css']
 })
-export class TaskComponent implements OnInit, AfterViewInit {
+export class TaskComponent implements OnInit {
 
   // Поля для таблицы (что отображают данные из задачи - должны совпадать с названиями переменных класса)
 
@@ -21,24 +21,29 @@ export class TaskComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator, {static: false}) private paginator: MatPaginator;
   @ViewChild(MatSort, {static: false}) private sort: MatSort;
 
-  tasks: Task[];
+  public tasks: Task[];
+  @Output()
+  updateTask = new EventEmitter<Task>();
+
+  @Input('tasks')
+  public set setTasks(tasks: Task[]) {
+    this.tasks = tasks;
+    this.fillTable();
+  }
 
   constructor(private dataHandler: DataHandlerService) {
   }
 
   // tslint:disable-next-line:typedef
   ngOnInit() {
-    this.dataHandler.taskSubject.subscribe(tasks => this.tasks = tasks);
+    // this.dataHandler.getAllTasks().subscribe(tasks => this.tasks = tasks);
 
-// датасорс обязательно нужно создавать для таблицы, в него присваивается любой источник
+    // датасорс обязательно нужно создавать для таблицы, в него присваивается любой источник
     this.dataSource = new MatTableDataSource();
 
-    this.refreshTable();
+    this.fillTable();
   }
 
-  ngAfterViewInit(): void {
-    this.addTableObjects();
-  }
 
   // tslint:disable-next-line:typedef
   toggleTaskCompleted(task: Task) {
@@ -60,7 +65,10 @@ export class TaskComponent implements OnInit, AfterViewInit {
 
   // Показывает задачи с применением всех текущих условий
   // tslint:disable-next-line:typedef
-  private refreshTable() {
+  private fillTable() {
+    if (!this.dataSource) {
+      return;
+    }
 
     this.dataSource.data = this.tasks;
 
@@ -92,5 +100,10 @@ export class TaskComponent implements OnInit, AfterViewInit {
   private addTableObjects() {
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
+  }
+
+  // tslint:disable-next-line:typedef
+  private onClickTask(task: Task) {
+    this.updateTask.emit(task);
   }
 }

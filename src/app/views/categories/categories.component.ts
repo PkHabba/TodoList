@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {DataHandlerService} from '../../service/data-handler.service';
 import {Category} from '../../model/Category';
 
@@ -9,7 +9,11 @@ import {Category} from '../../model/Category';
 })
 export class CategoriesComponent implements OnInit {
 
+  @Input()
   categories: Category[];
+
+  @Output()
+  selectCategory = new EventEmitter<Category>();
 
   selectedCategory: Category;
 
@@ -17,12 +21,17 @@ export class CategoriesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.dataHandler.categoriesSubject.subscribe(categories => this.categories = categories);
+    // this.dataHandler.categoriesSubject.subscribe(categories => this.categories = categories);
   }
 
   // tslint:disable-next-line:typedef
   showTasksByCategory(category: Category) {
+    if (this.selectedCategory === category) {
+      return;
+    }
+
     this.selectedCategory = category;
-    this.dataHandler.fillTasksByCategory(category);
+
+    this.selectCategory.emit(this.selectedCategory);
   }
 }
